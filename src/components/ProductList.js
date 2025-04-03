@@ -1,124 +1,92 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './ProductList.css';
 
-const ProductList = ({ products, onAddToCart, currentPage, totalPages, onPageChange }) => {
-  const [quantities, setQuantities] = useState({});
-
-  const handleQuantityChange = (productId, change) => {
-    setQuantities(prev => ({
-      ...prev,
-      [productId]: Math.max(0, (prev[productId] || 0) + change)
-    }));
-  };
-
-  const handleAddToCart = (product) => {
-    const quantity = quantities[product.id] || 1;
-    if (quantity > 0) {
-      onAddToCart(product, quantity);
-      setQuantities(prev => ({ ...prev, [product.id]: 0 }));
+const ProductList = ({ products, loading, currentPage, totalPages, onPageChange, onAddToCart,updateCartItemQuantity,cartItems }) => {
+  if (loading) {
+    return <div className="loading">Loading products...</div>;
+  }
+  const getValues=(product)=>{
+    const data=cartItems.filter(data=>data.id === product.id)
+    if(data.length===0){
+      return 0; 
     }
-  };
+    return data[0].quantity
 
-  const renderPagination = () => {
-    const pages = [];
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+  const getProductQuantity= (product,value)=>{   
+    const data=cartItems.filter(data=>data.id === product.id)
+    if(data.length===0){
+      onAddToCart(product)
     }
+   else{
+    
+    updateCartItemQuantity(product.id,data[0].quantity+value)
+   }
+    console.log(data)
+    console.log(product)
+   
+  }
+  console.log(cartItems)
 
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          className={`pagination-button ${currentPage === i ? 'active' : ''}`}
-          onClick={() => onPageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    return (
+  return (
+    <div className="product-list">
+      <div className="products-grid">
+        {products.map(product => (
+          <div key={product.id} className="product-card">
+            <Link to={`/product/${product.id}`} className="product-link">
+              <img src={product.thumbnail} alt={product.title} />
+              <div className="product-info">
+                <h3>{product.title}</h3>
+                <p className="price">${product.price}</p>
+                <p className="description">{product.description}</p>
+                <div className="product-meta">
+                  <span className="rating">★ {product.rating}</span>
+                  <span className="stock">Stock: {product.stock}</span>
+                </div>
+              </div>
+            </Link>
+            <div className="product-actions">
+              <button 
+                className="add-to-cart-button"
+                onClick={() => onAddToCart(product, 1)}
+              >
+                Add to Cart
+              </button>
+              <div className="quantity-controls">
+                    <button disabled={getValues(product)===0}  onClick={() =>{
+                       getProductQuantity(product,-1)
+                      // updateCartItemQuantity(product.id, quty -1)
+                    }}>-</button>
+                    <span>{getValues(product)}</span>
+                    {/* {console.log(getProductQuantity(product.id))} */}
+                    
+                    <button onClick={() =>{ 
+                     getProductQuantity(product,1)
+                      // updateCartItemQuantity(product.id,quty+ 1)
+                      }}>+</button>
+                  </div>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className="pagination">
         <button
-          className="pagination-button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Previous
         </button>
-        {startPage > 1 && (
-          <>
-            <button
-              className="pagination-button"
-              onClick={() => onPageChange(1)}
-            >
-              1
-            </button>
-            {startPage > 2 && <span className="pagination-ellipsis">...</span>}
-          </>
-        )}
-        {pages}
-        {endPage < totalPages && (
-          <>
-            {endPage < totalPages - 1 && <span className="pagination-ellipsis">...</span>}
-            <button
-              className="pagination-button"
-              onClick={() => onPageChange(totalPages)}
-            >
-              {totalPages}
-            </button>
-          </>
-        )}
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
         <button
-          className="pagination-button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
           Next
         </button>
       </div>
-    );
-  };
-
-  return (
-    <div className="product-list-container">
-      <div className="product-list">
-        {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <div className="product-image">
-              <img src={product.thumbnail} alt={product.title} />
-              <div className="product-actions">
-                <div className="quantity-controls">
-                  <button onClick={() => handleQuantityChange(product.id, -1)}>-</button>
-                  <span>{quantities[product.id] || 0}</span>
-                  <button onClick={() => handleQuantityChange(product.id, 1)}>+</button>
-                </div>
-                <button 
-                  className="add-to-cart-button"
-                  onClick={() => handleAddToCart(product)}
-                  disabled={!quantities[product.id]}
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-            <div className="product-info">
-              <h3>{product.title}</h3>
-              <p className="product-price">${product.price}</p>
-              <p className="product-description">{product.description}</p>
-              <div className="product-meta">
-                <span className="product-rating">★ {product.rating}</span>
-                <span className="product-stock">Stock: {product.stock}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      {renderPagination()}
     </div>
   );
 };

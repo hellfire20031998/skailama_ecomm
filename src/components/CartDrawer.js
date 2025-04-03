@@ -1,8 +1,11 @@
 import React from 'react';
 import './CartDrawer.css';
+import { useNavigate } from 'react-router-dom';
 
-const CartDrawer = ({ isOpen, onClose, cartItems, updateQuantity }) => {
+const CartDrawer = ({ isOpen, onClose, cartItems, updateCartItemQuantity }) => {
+  const navigate=useNavigate();
   if (!isOpen) return null;
+  
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -24,9 +27,9 @@ const CartDrawer = ({ isOpen, onClose, cartItems, updateQuantity }) => {
                   <h3>{item.title}</h3>
                   <p className="cart-item-price">${item.price}</p>
                   <div className="quantity-controls">
-                    <button onClick={() => updateQuantity(item.id, -1)}>-</button>
+                    <button onClick={() => updateCartItemQuantity(item.id, item.quantity -1)}>-</button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+                    <button onClick={() => updateCartItemQuantity(item.id,item.quantity+ 1)}>+</button>
                   </div>
                 </div>
               </div>
@@ -38,7 +41,7 @@ const CartDrawer = ({ isOpen, onClose, cartItems, updateQuantity }) => {
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <button className="checkout-button">Proceed to Checkout</button>
+          <button onClick={()=> navigate('/checkout')} className="checkout-button">Proceed to Checkout</button>
         </div>
       </div>
     </div>

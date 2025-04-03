@@ -1,33 +1,69 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  height: 80px;
 }
 
-.navbar-brand h1 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.8rem;
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
   font-weight: 600;
+  color: #2c3e50;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.navbar-cart {
-  position: relative;
-  cursor: pointer;
+.navbar-brand:hover {
+  color: #e74c3c;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.checkout-button {
+  padding: 0.5rem 1rem;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.checkout-button:hover {
+  background-color: #c0392b;
+}
+
+.cart-button {
+  background: none;
+  border: none;
   padding: 0.5rem;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-icon {
   font-size: 1.5rem;
-  color: #e74c3c;
 }
 
 .cart-count {
@@ -36,9 +72,25 @@
   right: 0;
   background-color: #e74c3c;
   color: white;
-  border-radius: 50%;
-  padding: 0.2rem 0.5rem;
   font-size: 0.8rem;
-  min-width: 18px;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  min-width: 20px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .checkout-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
 } 

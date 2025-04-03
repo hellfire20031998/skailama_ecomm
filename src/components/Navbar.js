@@ -1,16 +1,27 @@
 import React from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ cartCount, toggleCart }) => {
+const Navbar = ({ cartItemCount, onCartClick }) => {
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
-        <h1>Fashion Store</h1>
-      </div>
-      <div className="navbar-cart" onClick={toggleCart}>
-        <FaShoppingCart className="cart-icon" />
-        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+      <div className="navbar-container">
+        <Link to="/" className="navbar-brand">
+          Skailama E-Commerce
+        </Link>
+        <div className="navbar-actions">
+          {cartItemCount > 0 && (
+            <Link to="/checkout" className="checkout-button">
+              Checkout
+            </Link>
+          )}
+          <button className="cart-button" onClick={onCartClick}>
+            <span className="cart-icon">🛒</span>
+            {cartItemCount > 0 && (
+              <span className="cart-count">{cartItemCount}</span>
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );
