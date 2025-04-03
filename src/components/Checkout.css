@@ -68,7 +68,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
 }
 
 .place-order-button:hover {

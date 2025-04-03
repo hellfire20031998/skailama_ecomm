@@ -15,6 +15,23 @@ function App() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  const [searchKeyword,setSearchKeyword]= useState([]);
+
+  const handleSearch = async () =>{
+    try {
+      setLoading(true);
+      const response = await fetch(`https://dummyjson.com/products/search?q=${searchKeyword}`);
+      const data = await response.json();
+      setProducts(data.products);
+      setTotalPages(Math.ceil(data.total / 20));
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const fetchProducts = async (page = 1) => {
     try {
       setLoading(true);
@@ -29,6 +46,7 @@ function App() {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchProducts();
@@ -79,6 +97,8 @@ function App() {
         <Navbar
           cartItemCount={getTotalItems()}
           onCartClick={() => setIsCartOpen(true)}
+          setSearchKeyword={setSearchKeyword}
+          handleSearch={handleSearch}
         />
         <CartDrawer
           isOpen={isCartOpen}
